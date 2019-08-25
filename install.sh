@@ -2,17 +2,17 @@
 
 set -e
 
-ARCH=`uname -m`
+ARCH=$(uname -m)
 
-if [ "${ARCH}" != "x86_64" ]; then
+if [[ "${ARCH}" != "x86_64" ]]; then
   echo "summon-ssm-secrets only works on 64-bit systems"
   echo "exiting installer"
   exit 1
 fi
 
-DISTRO=`uname | tr "[:upper:]" "[:lower:]"`
+DISTRO=$(uname | tr "[:upper:]" "[:lower:]")
 
-if [ "${DISTRO}" != "linux" ] && [ "${DISTRO}" != "darwin"  ]; then
+if [[ "${DISTRO}" != "linux" ]] && [[ "${DISTRO}" != "darwin" ]]; then
   echo "This installer only supports Linux and OSX"
   echo "exiting installer"
   exit 1
@@ -38,8 +38,8 @@ function do_download(){
   fi
 }
 
-LATEST_VERSION=$(curl -s https://api.github.com/repos/cyberark/summon-ssm-secrets/releases/latest | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
-BASEURL="https://github.com/cyberark/summon-ssm-secrets/releases/download/"
+LATEST_VERSION=$(curl -s https://api.github.com/repos/slimm609/summon-ssm-secrets/releases/latest | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
+BASEURL="https://github.com/slimm609/summon-ssm-secrets/releases/download/"
 URL=${BASEURL}"${LATEST_VERSION}/summon-ssm-secrets-${DISTRO}-amd64.tar.gz"
 
 ZIP_PATH="${tmp_dir}/summon-ssm-secrets.tar.gz"
