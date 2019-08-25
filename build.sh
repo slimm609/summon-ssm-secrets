@@ -16,7 +16,7 @@ PLATFORMS=(
   'windows:amd64'
 )
 
-echo "Creating summon-aws-secrets binaries in output/"
+echo "Creating summon-ssm-secrets binaries in output/"
 docker-compose build --pull builder
 
 for platform in "${PLATFORMS[@]}"; do
@@ -31,5 +31,5 @@ for platform in "${PLATFORMS[@]}"; do
                      -e GOOS=$GOOS \
                      -e GOARCH=$GOARCH \
     builder \
-      build -o output/summon-aws-secrets-$GOOS-$GOARCH
+      build -o output/summon-ssm-secrets-$GOOS-$GOARCH
 done

@@ -1,4 +1,4 @@
-module github.com/cyberark/summon-aws-secrets
+module github.com/slimm609/summon-ssm-secrets
 
 require (
 	github.com/aws/aws-sdk-go v1.17.1

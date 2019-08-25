@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-GLOB='summon-aws-secrets-*-amd64'
+GLOB='summon-ssm-secrets-*-amd64'
 
 echo "==> Packaging..."
 
@@ -11,9 +11,9 @@ pushd output
 for binary_name in $GLOB; do
   pushd dist
 
-  cp ../$binary_name summon-aws-secrets && \
-  tar -cvzf $binary_name.tar.gz summon-aws-secrets && \
-  rm -f summon-aws-secrets
+  cp ../$binary_name summon-ssm-secrets && \
+  tar -cvzf $binary_name.tar.gz summon-ssm-secrets && \
+  rm -f summon-ssm-secrets
 
   popd
 done

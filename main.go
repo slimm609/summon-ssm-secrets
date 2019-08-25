@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"os"
 	"strings"
 	"fmt"
@@ -9,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/secretsmanager"
+	"github.com/aws/aws-sdk-go/service/ssm"
 )
 
 func RetrieveSecret(variableName string) {
@@ -51,43 +50,26 @@ func RetrieveSecret(variableName string) {
 	// to the New function. This option allows you to provide service
 	// specific configuration.
 
-	svc := secretsmanager.New(sess)
+	svc := ssm.New(sess)
 
 	// Check if key has been specified
 	arguments := strings.SplitN(variableName, "#", 2)
 
 	secretName := arguments[0]
-	var keyName string
-
-	if len(arguments) > 1 {
-		keyName = arguments[1]
-	}
 
 	// Get secret value
-	req, resp := svc.GetSecretValueRequest(&secretsmanager.GetSecretValueInput{
-		SecretId: aws.String(secretName),
+	withDecryption := true
+	param, err := svc.GetParameter(&ssm.GetParameterInput{
+		Name: aws.String(secretName),
+		WithDecryption: &withDecryption,
 	})
 
-	err = req.Send()
-	if err != nil { // resp is now filled
+	if err != nil {
 		printAndExit(err)
 	}
 
-	var secretBytes []byte
-	if resp.SecretString != nil {
-		secretBytes = []byte(*resp.SecretString)
-	} else {
-		secretBytes = resp.SecretBinary
-	}
+	fmt.Print(string(*param.Parameter.Value))
 
-	if keyName != "" {
-		secretBytes, err = getValueByKey(keyName, secretBytes)
-		if err != nil {
-			printAndExit(err)
-		}
-	}
-
-	os.Stdout.Write(secretBytes)
 }
 
 func main() {
@@ -110,17 +92,4 @@ func main() {
 func printAndExit(err error) {
 	os.Stderr.Write([]byte(err.Error()))
 	os.Exit(1)
-}
-
-func getValueByKey(keyName string, secretBytes []byte) (secret []byte, err error) {
-	var secrets map[string]interface{}
-	var secretValue string
-
-	if err := json.Unmarshal(secretBytes, &secrets); err != nil {
-		return nil, err
-	}
-
-	secretValue = fmt.Sprint(secrets[keyName])
-
-	return []byte(secretValue), nil
 }

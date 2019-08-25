@@ -2,20 +2,20 @@ version: '2'
 services:
   builder:
     build: .
-    image: summon-aws-secrets-builder
+    image: summon-ssm-secrets-builder
     entrypoint: /usr/local/go/bin/go
     command: build -v
     volumes:
-      - ./output:/summon-aws-secrets/output
+      - ./output:/summon-ssm-secrets/output
     environment:
       GOOS:
       GOARCH:
 
   tester:
     build: .
-    image: summon-aws-secrets-tester
+    image: summon-ssm-secrets-tester
     ports:
       - "8080"
     command: './test-entrypoint.sh'
     volumes:
-      - .:/summon-aws-secrets
+      - .:/summon-ssm-secrets

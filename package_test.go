@@ -19,19 +19,19 @@ func RunCommand(name string, arg ...string) (bytes.Buffer, bytes.Buffer, error) 
 	return stdout, stderr, err
 }
 
-const PackageName = "summon-aws-secrets"
+const PackageName = "summon-ssm-secrets"
 
 func TestPackage(t *testing.T) {
 
 	Path := os.Getenv("PATH")
 
-	Convey("Given a compiled summon-aws-secrets package", t, func() {
+	Convey("Given a compiled summon-ssm-secrets package", t, func() {
 		Convey("Given no configuration information", func() {
 			e := ClearEnv()
 			defer e.RestoreEnv()
 			os.Setenv("PATH", Path)
 
-			Convey("Given summon-aws-secrets is run with no arguments", func() {
+			Convey("Given summon-ssm-secrets is run with no arguments", func() {
 				_, stderr, err := RunCommand(PackageName)
 
 				Convey("Returns with error", func() {
@@ -39,24 +39,6 @@ func TestPackage(t *testing.T) {
 					So(stderr.String(), ShouldStartWith, "A variable ID or version flag must be given as the first and only argument!")
 				})
 			})
-		})
-	})
-}
-
-func Test_getValueByKey(t *testing.T) {
-	Convey("Given a valid JSON format stored secret", t, func() {
-		secret := `{ "username": "USERNAME", "password": "PASSWORD", "port": 8000 }`
-
-		Convey("Returns the value of the key", func() {
-			stdout, err := getValueByKey("username", []byte(secret))
-			So(err, ShouldBeNil)
-			So(string(stdout), ShouldEqual, "USERNAME")
-		})
-
-		Convey("Always returns as a string", func() {
-			stdout, err := getValueByKey("port", []byte(secret))
-			So(err, ShouldBeNil)
-			So(string(stdout), ShouldEqual, "8000")
 		})
 	})
 }

@@ -5,7 +5,7 @@ set -e
 ARCH=`uname -m`
 
 if [ "${ARCH}" != "x86_64" ]; then
-  echo "summon-aws-secrets only works on 64-bit systems"
+  echo "summon-ssm-secrets only works on 64-bit systems"
   echo "exiting installer"
   exit 1
 fi
@@ -38,17 +38,17 @@ function do_download(){
   fi
 }
 
-LATEST_VERSION=$(curl -s https://api.github.com/repos/cyberark/summon-aws-secrets/releases/latest | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
-BASEURL="https://github.com/cyberark/summon-aws-secrets/releases/download/"
-URL=${BASEURL}"${LATEST_VERSION}/summon-aws-secrets-${DISTRO}-amd64.tar.gz"
+LATEST_VERSION=$(curl -s https://api.github.com/repos/cyberark/summon-ssm-secrets/releases/latest | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
+BASEURL="https://github.com/cyberark/summon-ssm-secrets/releases/download/"
+URL=${BASEURL}"${LATEST_VERSION}/summon-ssm-secrets-${DISTRO}-amd64.tar.gz"
 
-ZIP_PATH="${tmp_dir}/summon-aws-secrets.tar.gz"
+ZIP_PATH="${tmp_dir}/summon-ssm-secrets.tar.gz"
 do_download ${URL} ${ZIP_PATH}
 
-echo "Installing summon-aws-secrets ${LATEST_VERSION} into /usr/local/lib/summon"
+echo "Installing summon-ssm-secrets ${LATEST_VERSION} into /usr/local/lib/summon"
 
 sudo mkdir -p /usr/local/lib/summon
 sudo tar -C /usr/local/lib/summon -zxvf ${ZIP_PATH}
 
 echo "Success!"
-echo "Run /usr/local/lib/summon/summon-aws-secrets for usage"
+echo "Run /usr/local/lib/summon/summon-ssm-secrets for usage"
