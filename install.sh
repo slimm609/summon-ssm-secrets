@@ -47,8 +47,14 @@ do_download ${URL} ${ZIP_PATH}
 
 echo "Installing summon-ssm-secrets ${LATEST_VERSION} into /usr/local/lib/summon"
 
-sudo mkdir -p /usr/local/lib/summon
-sudo tar -C /usr/local/lib/summon -zxvf ${ZIP_PATH}
+if sudo -h >/dev/null 2>&1; then
+  sudo mkdir -p /usr/local/lib/summon
+  sudo tar -C /usr/local/lib/summon -zxvf ${ZIP_PATH}
+else
+  mkdir -p /usr/local/lib/summon
+  tar -C /usr/local/lib/summon -zxvf ${ZIP_PATH}
+fi
+
 
 echo "Success!"
 echo "Run /usr/local/lib/summon/summon-ssm-secrets for usage"
