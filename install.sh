@@ -55,6 +55,5 @@ else
   tar -C /usr/local/lib/summon -zxvf ${ZIP_PATH}
 fi
 
-
 echo "Success!"
 echo "Run /usr/local/lib/summon/summon-ssm-secrets for usage"
